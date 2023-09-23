@@ -1,0 +1,86 @@
+Title: Setting Up Multiple Git Profiles with Separate .gitconfig Files
+
+Instructions:
+
+Step 1: Create Separate Repositories Directories
+
+Organize your Git repositories into distinct folders based on the profiles you want to work with:
+Create a ~/work/ directory for work-related projects.
+Create a ~/personal/ directory for open-source and side projects.
+Step 2: Configure Global Git Settings
+
+If not already present, create the global .gitconfig file in your home directory using the following command:
+bash
+Copy code
+touch ~/.gitconfig
+Edit the .gitconfig file and add the following entries:
+gitconfig
+Copy code
+[includeIf "gitdir:~/personal/"]
+  path = ~/.gitconfig-personal
+[includeIf "gitdir:~/work/"]
+  path = ~/.gitconfig-work
+These entries instruct Git to include specific .gitconfig files based on the repository's directory path.
+Step 3: Create Individual Git Configurations for Profiles
+
+Create individual .gitconfig files for each profile:
+
+For the WORK profile, create ~/.gitconfig-work:
+
+bash
+Copy code
+touch ~/.gitconfig-work
+Edit ~/.gitconfig-work and add the WORK profile configuration:
+
+gitconfig
+Copy code
+[user]
+name = work_user
+email = work_email
+For the PERSONAL profile, create ~/.gitconfig-personal:
+
+bash
+Copy code
+touch ~/.gitconfig-personal
+Edit ~/.gitconfig-personal and add the PERSONAL profile configuration:
+
+gitconfig
+Copy code
+[user]
+name = personal_user
+email = personal_email
+Step 4: Verify the Configuration
+
+Create and initialize new Git repositories in both the WORK and PERSONAL directories to confirm the setup.
+
+For the WORK directory:
+
+bash
+Copy code
+cd ~/work
+mkdir work-test-repo
+cd work-test-repo
+git init
+For the PERSONAL directory:
+
+bash
+Copy code
+cd ~/personal
+mkdir personal-test-repo
+cd personal-test-repo
+git init
+After initializing the repositories, check the Git configurations for each repository:
+
+For WORK:
+
+bash
+Copy code
+git config -l
+For PERSONAL:
+
+bash
+Copy code
+git config -l
+You should observe that the email and user name configurations differ between the two profiles, indicating that Git is using the custom .gitconfig files based on the repository's directory path.
+
+Congratulations! You have successfully set up multiple Git profiles with separate .gitconfig files, enabling you to manage different configurations for distinct types of projects on your machine.
