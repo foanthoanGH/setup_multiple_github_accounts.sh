@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# Step 1: Generating SSH Keys
+echo "Step 1: Generating SSH Keys"
+echo "Enter your personal email id:"
+read personal_email
+ssh-keygen -t rsa -b 4096 -C "$personal_email"
+echo "Enter your work email id:"
+read work_email
+ssh-keygen -t rsa -b 4096 -C "$work_email"
+echo "SSH keys generated successfully."
+
+# Step 2: Adding SSH Keys to GitHub Accounts
+echo "Step 2: Adding SSH Keys to GitHub Accounts"
+echo "Copy the following public key to your personal GitHub account:"
+cat ~/.ssh/id_rsa_personal.pub
+echo "Copy the following public key to your work GitHub account:"
+cat ~/.ssh/id_rsa_work.pub
+echo "Public keys copied to clipboard. Press Enter to continue..."
+read
+
+# Step 3: Creating the SSH Config File
+echo "Step 3: Creating the SSH Config File"
+echo "Creating ~/.ssh/config file..."
+touch ~/.ssh/config
+echo "# Personal account - default config" >> ~/.ssh/config
+echo "Host github.com-personal" >> ~/.ssh/config
+echo "   HostName github.com" >> ~/.ssh/config
+echo "   User git" >> ~/.ssh/config
+echo "   IdentityFile ~/.ssh/id_rsa_personal" >> ~/.ssh/config
+echo "# Work account" >> ~/.ssh/config
+echo "Host github.com-work" >> ~/.ssh/config
+echo "   HostName github.com" >> ~/.ssh/config
+echo "   User git" >> ~/.ssh/config
+echo "   IdentityFile ~/.ssh/id_rsa_work" >> ~/.ssh/config
+echo "SSH config file created successfully."
+
+# Step 4: Creating Git Config Files
+echo "Step 4: Creating Git Config Files"
+echo "Enter your personal name:"
+read personal_name
+echo "Enter your personal email id:"
+read personal_email
+echo "[user]" >> ~/.gitconfig
+echo "    name = $personal_name" >> ~/.gitconfig
+echo "    email = $personal_email" >> ~/.gitconfig
+echo "Git config for personal account created successfully."
+
+echo "Enter your work name:"
+read work_name
+echo "Enter your work email id:"
+read work_email
+echo "[user]" >> ~/work/.gitconfig
+echo "    name = $work_name" >> ~/work/.gitconfig
+echo "    email = $work_email" >> ~/work/.gitconfig
+echo "Git config for work account created successfully."
+
+# Step 5: Adding SSH Keys to SSH Agent
+echo "Step 5: Adding SSH Keys to SSH Agent"
+echo "Adding personal SSH key to SSH agent..."
+ssh-add ~/.ssh/id_rsa_personal
+echo "Adding work SSH key to SSH agent..."
+ssh-add ~/.ssh/id_rsa_work
+echo "SSH keys added to SSH agent successfully."
+
+# Step 6: Checking Configuration
+echo "Step 6: Checking Configuration"
+echo "Testing personal account..."
+ssh -T github.com-personal
+echo "Testing work account..."
+ssh -T github.com-work
+
+# Step 7: Cloning Repositories
+echo "Step 7: Cloning Repositories"
+echo "Cloning a repository for personal account..."
+git clone git@github.com-personal:sagarjunnarkar/sagarjunnarkar.github.io.git
+echo "Cloning a repository for work account..."
+git clone git@github.com-work:coder-train/multiple-git-accounts-demo.git
+
+echo "Setup completed successfully."
